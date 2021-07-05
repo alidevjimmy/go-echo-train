@@ -1,0 +1,37 @@
+version: "3.9"
+services:
+  trainapp:
+    build: .
+    ports:
+      - 8081:8080
+    volumes: 
+      - ./src:/go/src/trainapp
+  pgdb:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - 5432:5432
+    networks: 
+      - pgnet
+    volumes: 
+      - pgdata:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4
+    ports: 
+      - 8080:80
+    restart: always  
+    environment: 
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    networks: 
+      - pgnet
+    volumes: 
+      - pgadmindata:/var/lib/postgresql/data
+networks: 
+  pgnet:
+    driver: bridge
+volumes: 
+  pgdata:
+  pgadmindata: 
